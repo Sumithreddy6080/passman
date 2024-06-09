@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 
 const HomePage = () => {
@@ -6,6 +6,13 @@ const HomePage = () => {
   const [password, setPassword] = useState('');
   const [website, setWebsite] = useState('');
   const [savedDetails, setSavedDetails] = useState([]);
+
+  useEffect(() => {
+    const storedDetails = JSON.parse(localStorage.getItem('savedDetails'));
+    if (storedDetails) {
+      setSavedDetails(storedDetails);
+    }
+  }, []);
 
   const handleNew = () => {
     setUsername('');
@@ -15,13 +22,16 @@ const HomePage = () => {
 
   const handleSave = () => {
     const newDetail = { username, password, website };
-    setSavedDetails([...savedDetails, newDetail]);
+    const newSavedDetails = [...savedDetails, newDetail];
+    setSavedDetails(newSavedDetails);
+    localStorage.setItem('savedDetails', JSON.stringify(newSavedDetails));
     handleNew(); // Clear the form fields after saving
   };
 
   const handleDelete = (index) => {
     const newSavedDetails = savedDetails.filter((_, i) => i !== index);
     setSavedDetails(newSavedDetails);
+    localStorage.setItem('savedDetails', JSON.stringify(newSavedDetails));
   };
 
   return (
